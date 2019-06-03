@@ -3,6 +3,7 @@ package ncs.kh.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -11,9 +12,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ncs.kh.dao.ClassDoingDAO;
 import ncs.kh.dao.ClassInfoDAO;
 import ncs.kh.dao.MemberDAO;
+import ncs.kh.dto.ClassDoingDTO;
 import ncs.kh.dto.ClassInfoDTO;
+import oracle.net.aso.e;
 
 @WebServlet("*.classInfo")
 public class FrontController_classInfo extends HttpServlet {
@@ -30,6 +34,7 @@ public class FrontController_classInfo extends HttpServlet {
 		
 		ClassInfoDAO i_dao = new ClassInfoDAO();
 		MemberDAO m_dao = new MemberDAO();
+		ClassDoingDAO d_dao = new ClassDoingDAO();
 		try {
 			if(cmd.equals("/index.classInfo")) {
 				//시작페이지에서 넘어올때, 해당 class의 info넘겨주기
@@ -49,6 +54,8 @@ public class FrontController_classInfo extends HttpServlet {
 				request.setAttribute("closedDateList", closedDateList);
 				
 				System.out.println("담기완료");
+				//임시로 아이디전달해주기
+				request.setAttribute("loginId", "tmp" );
 				request.getRequestDispatcher("detail.jsp").forward(request, response);
 			}else if(cmd.equals("/applicable.classInfo")) { 
 				//보내준 날짜에 신청한 인원이 총 몇명인지
@@ -56,6 +63,15 @@ public class FrontController_classInfo extends HttpServlet {
 				String checkDate = request.getParameter("check");
 				String signupNum = i_dao.selectCountCheckDate(classId, checkDate);
 				pw.append(signupNum);
+			}else if(cmd.equals("/purchaseClass.classInfo")) {
+				int classId = Integer.parseInt(request.getParameter("classId"));
+				String userId = request.getParameter("userId");
+				String selectedDate = request.getParameter("selectedDate");
+				ClassDoingDTO d_dto = new ClassDoingDTO(1,classId,userId,"","",selectedDate);
+				int result = d_dao.insertClassDoing(d_dto);
+				
+				request.setAttribute("result", result);
+				request.getRequestDispatcher("insertClassDoingView.jsp").forward(request, response);
 			}
 		}catch(Exception e) {
 			e.printStackTrace();

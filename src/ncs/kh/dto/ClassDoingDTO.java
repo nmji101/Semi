@@ -1,6 +1,6 @@
 package ncs.kh.dto;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class ClassDoingDTO {
 	private int do_seq;
@@ -8,14 +8,14 @@ public class ClassDoingDTO {
 	private String do_userid;
 	private String do_status;
 	private String do_reviewok;
-	private Date do_date; //해당 수업 신청날짜
+	private String do_date; //해당 수업을 수강할 날짜
 	
 	
 	public ClassDoingDTO() {
 		super();
 	}
 	public ClassDoingDTO(int do_seq, int do_classid, String do_userid, String do_status, String do_reviewok,
-			Date do_date) {
+			String do_date) {
 		super();
 		this.do_seq = do_seq;
 		this.do_classid = do_classid;
@@ -54,10 +54,10 @@ public class ClassDoingDTO {
 	public void setDo_reviewok(String do_reviewok) {
 		this.do_reviewok = do_reviewok;
 	}
-	public Date getDo_date() {
+	public String getDo_date() {
 		return do_date;
 	}
-	public void setDo_date(Date do_date) {
+	public void setDo_date(String do_date) {
 		this.do_date = do_date;
 	}
 	

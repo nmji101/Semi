@@ -281,7 +281,7 @@
             $("#scdBtn").hide();
             $("#select").hide();
 				
-           
+            	var selectedDate = "";
                 $(".calendar").on("click",function(){
                     var calendar = $(".calendar").text();
                     if(calendar == "달력에서 보기"){
@@ -299,6 +299,7 @@
                         			}
                         		}).done(function(resp){
                         			var checkDate = new Date(dateText) //해당날짜
+                        			selectedDate = dateText;
                         			var m = checkDate.getMonth(), d = checkDate.getDate(), y = checkDate.getFullYear(), dy = checkDate.getDay();
                         			var dayLabel = getDayLabel(dy);
                         			var dateInfo = y+"년 "+(m+1)+"월 "+d+"일 ("+dayLabel+")";
@@ -347,7 +348,26 @@
                 		alert("상품을 선택해주세요");
                 		return;
                 	}
+                
+                	var classId = "${classInfo.info_classid}";
+                	var userId = "${loginId}"
+                	if(userId==""){
+                		alert("로그인 후 구매해주세요.");
+                	}
                 	
+                	var purchaseForm = $("<form></form>");
+                	$(purchaseForm).prop("action","purchaseClass.classInfo");
+                	$(purchaseForm).prop("method","post");
+                	
+                	$(purchaseForm).append($('<input type="hidden" value="'+classId+'" name="classId">'));
+                	$(purchaseForm).append($('<input type="hidden" value="'+userId+'" name="userId">'));
+                	$(purchaseForm).append($('<input type="hidden" value="'+selectedDate+'" name="selectedDate">'));
+                	
+                	alert("구매진행중");
+                	$(purchaseForm).appendTo("body");
+                	//alert(classId + " : " + userId + " : " + selectedDate);
+                	
+                	$(purchaseForm).submit();
                 });
   
                 
@@ -358,9 +378,6 @@
     <c:forEach var="date" items="${closedDateList}">
     	<input class="date" type="hidden" value="${date }">
     </c:forEach>
-    <form>
-    	
-    </form>
         <div id="wrapper" class="container">
             <!--           HEADER-->
             <div id="header" class="row">
@@ -494,7 +511,9 @@
                     </div>
                     <div id="review" class="class_detail">
                         <h3>후기</h3>
-                        <div>후기용 게시판//임시자리~</div>
+                        <div>
+                        	<iframe src="http://localhost:8080/Semi/index.review" id="the_iframe" onload="calcHeight();" name="WrittenPublic" title="게시판뷰" frameborder="0" scrolling="no" style="overflow-x:hidden; overflow:auto; width:100%; min-height:500px;"></iframe>
+                        </div>
                     </div>
                     <!--                    여기까지 mainContent   -->
                 </div>
